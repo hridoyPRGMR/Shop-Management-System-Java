@@ -217,7 +217,7 @@
                     </nav>
                     <!-- Your existing content for 'Add Product' and 'Show Product' sections -->
                     <div class="container-fluid" id="product-container">
-
+                        
                     </div>
                 </div>
             </div>
@@ -226,65 +226,72 @@
 
 
         <!-- Bootstrap JS and dependencies -->
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="JS/myjs.js" type="text/javascript"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <!--add product script-->
+
         <script>
-                            $(document).ready(function () {
-                                $('#productForm').submit(function (e) {
-                                    e.preventDefault();
 
-                                    var formData = new FormData(this);
+        </script>
 
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: 'AddProductsServlet',
-                                        data: formData,
-                                        contentType: false,
-                                        processData: false,
-                                        success: function (data, textStatus, jqXHR) {
-                                            if (data.trim() === 'Product Added') {
-                                                // Fetch form details
-                                                var productName = $('#productName').val();
-                                                var img = $('#productImage')[0]; // Assuming this is a file input, use .files[0].name to get the file name
-                                                var unitPrice = $('#unitPrice').val();
-                                                var productCount = $('#productCount').val();
-                                                var manufacturer = $('#manufacturer').val();
-                                                var productDescription = $('#shortDescription').val();
+        <script>
+            $(document).ready(function () {
+                $('#productForm').submit(function (e) {
+                    e.preventDefault();
 
-                                                var selectedFile = img.files[0];
-                                                var imageUrl = URL.createObjectURL(selectedFile);
+                    var formData = new FormData(this);
 
-                                                // Build HTML content for the card within the latestAddedProduct div
-                                                var content = '<div class="card">';
-                                                content += '<img src="' + imageUrl + '" class="card-img-top" style="max-width:300px" alt="Product Image">';
-                                                content += '<div class="card-body">';
-                                                content += '<h5 class="card-title">' + productName + '</h5>';
-                                                content += '<p class="card-text">' + productDescription + '</p>';
-                                                content += '<ul class="list-group list-group-flush">';
-                                                content += '<li class="list-group-item">Unit Price: $' + unitPrice + '</li>';
-                                                content += '<li class="list-group-item">Product Count: ' + productCount + '</li>';
-                                                content += '<li class="list-group-item">Manufacturer: ' + manufacturer + '</li>';
-                                                content += '</ul>';
-                                                content += '</div>';
-                                                content += '</div>';
+                    $.ajax({
+                        type: 'POST',
+                        url: 'AddProductsServlet',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.trim() === 'Product Added') {
+                                // Fetch form details
+                                var productName = $('#productName').val();
+                                var img = $('#productImage')[0]; // Assuming this is a file input, use .files[0].name to get the file name
+                                var unitPrice = $('#unitPrice').val();
+                                var productCount = $('#productCount').val();
+                                var manufacturer = $('#manufacturer').val();
+                                var productDescription = $('#shortDescription').val();
 
-                                                // Display the content within the latestAddedProduct div
-                                                $('#latestAddedProduct').html(content).fadeIn();
-                                                // Clear the form
-                                                $('#productForm')[0].reset();
-                                            } else {
-                                                alert('Failed to add product.');
-                                            }
-                                        },
-                                        error: function (jqXHR, textStatus, errorThrown) {
-                                            console.log(errorThrown);
-                                            alert('An error occurred while adding product.');
-                                        }
-                                    });
-                                });
-                            });
+                                var selectedFile = img.files[0];
+                                var imageUrl = URL.createObjectURL(selectedFile);
+
+                                // Build HTML content for the card within the latestAddedProduct div
+                                var content = '<div class="card">';
+                                content += '<img src="' + imageUrl + '" class="card-img-top" style="max-width:300px" alt="Product Image">';
+                                content += '<div class="card-body">';
+                                content += '<h5 class="card-title">' + productName + '</h5>';
+                                content += '<p class="card-text">' + productDescription + '</p>';
+                                content += '<ul class="list-group list-group-flush">';
+                                content += '<li class="list-group-item">Unit Price: $' + unitPrice + '</li>';
+                                content += '<li class="list-group-item">Product Count: ' + productCount + '</li>';
+                                content += '<li class="list-group-item">Manufacturer: ' + manufacturer + '</li>';
+                                content += '</ul>';
+                                content += '</div>';
+                                content += '</div>';
+
+                                // Display the content within the latestAddedProduct div
+                                $('#latestAddedProduct').html(content).fadeIn();
+                                // Clear the form
+                                $('#productForm')[0].reset();
+                            } else {
+                                alert('Failed to add product.');
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                            alert('An error occurred while adding product.');
+                        }
+                    });
+                });
+            });
         </script>
         <!--add product script ended-->
 
@@ -325,7 +332,7 @@
                     success: function (data, textStatus, jqXHR) {
                         console.log(data); // Log the received data to the console for debugging
                         $("#product-container").html(data); // Update product container with fetched data
-
+                        
                         // Toggle 'active' class based on selected category
                         $(".c-link").removeClass("active"); // Remove 'active' class from all links
                         $(temp).addClass("active"); // Add 'active' class to the selected option
@@ -342,6 +349,8 @@
                 filterProducts(); // Call the filterProducts function on page load
             });
         </script>
+
+
 
     </body>
 

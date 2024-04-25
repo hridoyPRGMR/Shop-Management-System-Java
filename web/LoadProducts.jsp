@@ -29,6 +29,7 @@
 
             for (Products p : products) {
     %>
+    
     <div class="col-md-4">
         <div class="card product-card">
             <img src="Image/<%= p.getPimg() %>" class="card-img-top" alt="Product Image">

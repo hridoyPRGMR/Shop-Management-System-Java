@@ -42,6 +42,14 @@
                 </li>
                 
                 <li>
+                    <a a="#" class="navLink" data-page-url="SellProducts.jsp">
+                        <i class="fa-solid fa-info"></i>
+                        <span class="link_name">Sell Information</span>
+                    </a>
+                    <span class="tooltip">Manage</span>
+                </li>
+                
+                <li>
                     <a a="#" class="navLink" data-page-url="ManageProducts.jsp">
                         <i class="fa-solid fa-cart-plus"></i>
                         <span class="link_name">Manage</span>
@@ -138,6 +146,7 @@
                 }
             });
         </script>
+        <script src="https://kit.fontawesome.com/36faa4be31.js" crossorigin="anonymous"></script>
 
     </body> 
 </html>

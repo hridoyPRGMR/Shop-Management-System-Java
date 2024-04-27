@@ -108,4 +108,23 @@ public class ProductsDao {
         
         return list;
     }
+    
+    public boolean deleteProductById(int productId){
+        boolean flag=false;
+        
+        try{
+            
+            String q="DELETE FROM products WHERE pid=?";
+            PreparedStatement pstmt=con.prepareStatement(q);
+            pstmt.setInt(1,productId);
+            pstmt.executeUpdate();
+            
+            flag=true;
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return flag;
+    }
 }

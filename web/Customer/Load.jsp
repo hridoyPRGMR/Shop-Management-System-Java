@@ -1,4 +1,3 @@
-
 <%@ page import="com.shop.sys.entities.Products" %>
 <%@ page import="com.shop.sys.dao.ProductsDao" %>
 <%@ page import="com.sho.sys.helper.ConnectionProvider" %>
@@ -41,6 +40,7 @@
                     <strong class="">Price: <%=p.getUnitprice()%> $</strong>
                     <!--<del class="">$24.99</del>-->
                 </div>
+                    <strong class="">Available: <%=p.getTotalp()%></strong>
                 <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
                     <a href="#" class="btn btn-outline-primary w-100">Add to cart</a>
                 </div>

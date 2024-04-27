@@ -49,7 +49,7 @@
             </div>
             <div class="card-footer">
                 <a href="#" class="btn btn-primary">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                <a href="#" value="<%=p.getPid()%>" data-imgsrc="<%= p.getPimg() %>" id="delete-product" class="btn btn-danger">Delete</a>
             </div>
         </div>
     </div>
@@ -63,3 +63,4 @@
         }
     %>
 </div>
+

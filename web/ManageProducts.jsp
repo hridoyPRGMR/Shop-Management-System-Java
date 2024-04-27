@@ -217,7 +217,7 @@
                     </nav>
                     <!-- Your existing content for 'Add Product' and 'Show Product' sections -->
                     <div class="container-fluid" id="product-container">
-                        
+
                     </div>
                 </div>
             </div>
@@ -226,7 +226,7 @@
 
 
         <!-- Bootstrap JS and dependencies -->
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="JS/myjs.js" type="text/javascript"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -236,6 +236,8 @@
         <script>
 
         </script>
+
+
 
         <script>
             $(document).ready(function () {
@@ -321,6 +323,67 @@
 
 
         <script>
+
+            function deleteProduct(productId,imgSrc) {
+
+                fetch('DeleteProductServlet', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                     body: 'productId=' + encodeURIComponent(productId) + '&imgSrc=' + encodeURIComponent(imgSrc)
+                })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        })
+                        .then(responseText => {
+                            // Handle the response from the servlet
+                            console.log(responseText);
+                            filterProducts();
+                        })
+                        .catch(error => {
+                            // Handle errors
+                            console.error('There was a problem with the fetch operation:', error);
+                        });
+
+            }
+
+            function attachDeleteEventListeners() {
+                const deleteButtons = document.querySelectorAll('.btn.btn-danger'); // Select all "Delete" buttons
+                
+                deleteButtons.forEach(function (button) {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const value = button.getAttribute('value');
+                        const imgSrc=button.getAttribute('data-imgsrc');
+                        
+                        Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, delete it!"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+
+                                deleteProduct(value,imgSrc);
+
+                                Swal.fire({
+                                    title: "Deleted!",
+                                    text: "Your file has been deleted.",
+                                    icon: "success"
+                                });
+                            }
+                        });
+                    });
+                });
+            }
+
             function filterProducts() {
                 let catId = $("#filterSelect").val(); // Get the selected category ID from the dropdown
                 let temp = $("#filterSelect option:selected")[0]; // Get the selected option element
@@ -332,10 +395,13 @@
                     success: function (data, textStatus, jqXHR) {
                         console.log(data); // Log the received data to the console for debugging
                         $("#product-container").html(data); // Update product container with fetched data
-                        
+
                         // Toggle 'active' class based on selected category
                         $(".c-link").removeClass("active"); // Remove 'active' class from all links
                         $(temp).addClass("active"); // Add 'active' class to the selected option
+
+                        attachDeleteEventListeners();
+
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.error("Error loading products:", errorThrown); // Log any errors to the console
@@ -348,6 +414,7 @@
                 // Load all products (category ID = 0) initially
                 filterProducts(); // Call the filterProducts function on page load
             });
+
         </script>
 
 

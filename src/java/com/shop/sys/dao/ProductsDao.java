@@ -1,7 +1,7 @@
 package com.shop.sys.dao;
 
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.*;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.PreparedStatement;
@@ -45,9 +45,40 @@ public class ProductsDao {
         return flag;
     }
 
-    public List<Products>getAllProducts() {
+    public boolean updateProduct(Products p) {
+        boolean flag = false;
+        try {
+            
+            String sql = "UPDATE products SET pname=?, pimg=?, unitprice=?, totalp=?, pcompany=?, pdes=?, cid=? WHERE pid=?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, p.getPname());
+            pstmt.setString(2, p.getPimg());
+            pstmt.setInt(3, p.getUnitprice());
+            pstmt.setInt(4, p.getTotalp());
+            pstmt.setString(5, p.getPcompany());
+            pstmt.setString(6, p.getPdes());
+            pstmt.setInt(7, p.getCid());
+            pstmt.setInt(8, p.getPid());
 
-        List<Products>list=new ArrayList<>();
+            int rowAffected = pstmt.executeUpdate();
+
+            flag = (rowAffected > 0);
+
+            pstmt.close(); // Close PreparedStatement
+
+        } catch (SQLException e) {
+            // Handle SQL exceptions
+            e.printStackTrace();
+        } catch (Exception e) {
+            // Handle other exceptions
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    public List<Products> getAllProducts() {
+
+        List<Products> list = new ArrayList<>();
 
         try {
             String q = "SELECT * FROM products ORDER BY date ASC";
@@ -78,15 +109,14 @@ public class ProductsDao {
 
     public List<Products> getProductsByCid(int catId) {
         List<Products> list = new ArrayList<>();
-        
-        try{
-            String q="SELECT * FROM products WHERE cid=? ORDER BY date ASC";
+
+        try {
+            String q = "SELECT * FROM products WHERE cid=? ORDER BY date ASC";
             PreparedStatement pstmt = con.prepareStatement(q);
             pstmt.setInt(1, catId);
             ResultSet set = pstmt.executeQuery();
-            
-            
-            while(set.next()) {
+
+            while (set.next()) {
                 int pid = set.getInt("pid");
                 String pname = set.getString("pname");
                 String pimg = set.getString("pimg");
@@ -100,31 +130,60 @@ public class ProductsDao {
                 Products product = new Products(pid, pname, pimg, unitprice, pCount, company, pdes, date, cid);
                 list.add(product);
             }
-            
-        }
-        catch(Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return list;
     }
-    
-    public boolean deleteProductById(int productId){
-        boolean flag=false;
-        
-        try{
-            
-            String q="DELETE FROM products WHERE pid=?";
-            PreparedStatement pstmt=con.prepareStatement(q);
-            pstmt.setInt(1,productId);
+
+    public boolean deleteProductById(int productId) {
+        boolean flag = false;
+
+        try {
+
+            String q = "DELETE FROM products WHERE pid=?";
+            PreparedStatement pstmt = con.prepareStatement(q);
+            pstmt.setInt(1, productId);
             pstmt.executeUpdate();
-            
-            flag=true;
-            
-        }catch(Exception e){
+
+            flag = true;
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return flag;
+    }
+
+    public Products getProductByPid(int pid) {
+        Products p = null;
+
+        try {
+            String q = "SELECT * FROM products WHERE pid=?";
+            PreparedStatement pstmt = con.prepareStatement(q);
+            pstmt.setInt(1, pid);
+            ResultSet set = pstmt.executeQuery();
+
+            if (set.next()) {
+                int productId = set.getInt("pid");
+                String pname = set.getString("pname");
+                String pimg = set.getString("pimg");
+                int unitprice = set.getInt("unitprice");
+                int pCount = set.getInt("totalp");
+                String company = set.getString("pcompany");
+                String pdes = set.getString("pdes");
+                Timestamp date = set.getTimestamp("date");
+                int cid = set.getInt("cid");
+
+                p = new Products(productId, pname, pimg, unitprice, pCount, company, pdes, date, cid);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return p;
     }
 }

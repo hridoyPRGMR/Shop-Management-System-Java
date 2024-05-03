@@ -190,6 +190,29 @@
                 </div>
             </div>
 
+
+
+            <!--Edit Modal -->
+            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-product-id="">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="productDetails">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!--Edit Modal End-->
+
             <!-- Latest Product Section -->
             <div id="latestProductSection">
                 <div class="row">
@@ -324,14 +347,14 @@
 
         <script>
 
-            function deleteProduct(productId,imgSrc) {
+            function deleteProduct(productId, imgSrc) {
 
                 fetch('DeleteProductServlet', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                     body: 'productId=' + encodeURIComponent(productId) + '&imgSrc=' + encodeURIComponent(imgSrc)
+                    body: 'productId=' + encodeURIComponent(productId) + '&imgSrc=' + encodeURIComponent(imgSrc)
                 })
                         .then(response => {
                             if (!response.ok) {
@@ -353,13 +376,13 @@
 
             function attachDeleteEventListeners() {
                 const deleteButtons = document.querySelectorAll('.btn.btn-danger'); // Select all "Delete" buttons
-                
+
                 deleteButtons.forEach(function (button) {
                     button.addEventListener('click', function (e) {
                         e.preventDefault();
                         const value = button.getAttribute('value');
-                        const imgSrc=button.getAttribute('data-imgsrc');
-                        
+                        const imgSrc = button.getAttribute('data-imgsrc');
+
                         Swal.fire({
                             title: "Are you sure?",
                             text: "You won't be able to revert this!",
@@ -371,7 +394,7 @@
                         }).then((result) => {
                             if (result.isConfirmed) {
 
-                                deleteProduct(value,imgSrc);
+                                deleteProduct(value, imgSrc);
 
                                 Swal.fire({
                                     title: "Deleted!",
@@ -384,6 +407,99 @@
                 });
             }
 
+            function attachEditEventListeners() {
+                const editButtons = document.querySelectorAll('.btn.btn-primary');
+
+                editButtons.forEach(function (button) {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const modal = document.querySelector('#editModal');
+                        const productId = button.getAttribute('value');
+
+                        fetch('ProductEditServlet?productId=' + productId)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.text();
+                                })
+                                .then(data => {
+                                    document.getElementById('productDetails').innerHTML = data;
+
+
+                                    // Attach event listener for form submission
+                                    const editForm = document.getElementById('editProductForm');
+                                    editForm.addEventListener('submit', function (e) {
+                                        e.preventDefault();
+                                        const formData = new FormData(this);
+//                                      const urlEncodedData = new URLSearchParams(formData).toString();//does not support multiconfig data
+
+                                        const select = document.getElementById('productCategorySelect').value;
+
+                                        if (select === 'Select category') {
+                                            alert("Please Select Category");
+                                            return;
+                                        }
+
+
+                                        fetch('ProductEditUpdate', {
+                                            method: 'POST',
+//                                            headers: {
+//                                                'Content-Type': 'application/x-www-form-urlencoded'
+//                                            },
+                                            body: formData
+                                        })
+                                                .then(response => {
+                                                    if (!response.ok) {
+                                                        throw new Error('Network response was not ok');
+                                                    }
+                                                    return response.text();
+                                                })
+                                                .then(data => {
+                                                    if (data.trim() === 'updated') {
+                                                        filterProducts();
+                                                        Swal.fire({
+                                                            position: "top-end",
+                                                            icon: "success",
+                                                            title: "Product details update done.",
+                                                            showConfirmButton: false,
+                                                            timer: 1500
+                                                        }).then(() => {
+                                                            $('#editModal').modal('hide');
+                                                        });
+                                                    } else {
+                                                        Swal.fire({
+                                                            position: "top-end",
+                                                            icon: "error",
+                                                            title: "Something wrong! try again",
+                                                            showConfirmButton: false,
+                                                            timer: 1500
+                                                        });
+                                                    }
+
+                                                })
+                                                .catch(error => {
+                                                    console.error('There was a problem with the fetch operation:', error);
+                                                });
+                                    });
+
+                                })
+                                .catch(error => {
+                                    console.error('FetchError', error);
+                                });
+
+                        if (modal) {
+                            button.setAttribute('data-toggle', 'modal');
+                            button.setAttribute('data-target', '#editModal');
+                        }
+                    });
+                });
+            }
+
+
+
+
+
             function filterProducts() {
                 let catId = $("#filterSelect").val(); // Get the selected category ID from the dropdown
                 let temp = $("#filterSelect option:selected")[0]; // Get the selected option element
@@ -393,7 +509,7 @@
                     method: "GET",
                     data: {cid: catId},
                     success: function (data, textStatus, jqXHR) {
-                        console.log(data); // Log the received data to the console for debugging
+//                        console.log(data); // Log the received data to the console for debugging
                         $("#product-container").html(data); // Update product container with fetched data
 
                         // Toggle 'active' class based on selected category
@@ -401,6 +517,7 @@
                         $(temp).addClass("active"); // Add 'active' class to the selected option
 
                         attachDeleteEventListeners();
+                        attachEditEventListeners();
 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {

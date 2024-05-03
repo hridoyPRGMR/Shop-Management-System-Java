@@ -24,6 +24,14 @@
         <servlet-name>DeleteProductServlet</servlet-name>
         <servlet-class>com.shop.sys.servlets.DeleteProductServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProductEditServlet</servlet-name>
+        <servlet-class>com.shop.sys.servlets.ProductEditServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductEditUpdate</servlet-name>
+        <servlet-class>com.shop.sys.servlets.ProductEditUpdate</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>DeleteProductServlet</servlet-name>
         <url-pattern>/DeleteProductServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductEditServlet</servlet-name>
+        <url-pattern>/ProductEditServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductEditUpdate</servlet-name>
+        <url-pattern>/ProductEditUpdate</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Customer/CustomerHome.jsp</welcome-file>

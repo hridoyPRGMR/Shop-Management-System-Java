@@ -48,7 +48,7 @@
                 <!-- Additional information like available count can be added here -->
             </div>
             <div class="card-footer">
-                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" value="<%=p.getPid()%>" class="btn btn-primary">Edit</a>
                 <a href="#" value="<%=p.getPid()%>" data-imgsrc="<%= p.getPimg() %>" id="delete-product" class="btn btn-danger">Delete</a>
             </div>
         </div>

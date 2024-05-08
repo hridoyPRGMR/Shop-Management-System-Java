@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="com.shop.sys.entities.Category"%>
+<%@page import="com.shop.sys.entities.Customer"%>
 <%@page import="com.shop.sys.dao.CategoryDao"%>
 <%@page import="com.sho.sys.helper.ConnectionProvider"%>
 <%@page import="java.util.ArrayList"%>
@@ -91,12 +92,22 @@
                                 <i class="fas fa-user"></i> My Account
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                                <%
+                                    Customer customer=(Customer)session.getAttribute("currentCustomer");
+                                %>
+
+                                <%if(customer==null){%>
                                 <a class="dropdown-item" href="#" id="signup">Sign Up</a>
-                                <a class="dropdown-item" href="#">Login</a>
+                                <a class="dropdown-item" href="#" id="login">Login</a>
+                                <%}else{%>
+
                                 <a class="dropdown-item" href="#">Profile</a>
                                 <a class="dropdown-item" href="#">Orders</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Logout</a>
+                                <a class="dropdown-item" href="#" id="logout">Logout</a>
+                                <%}%>
+
                             </div>
                         </li>
                         <li class="nav-item">
@@ -156,6 +167,32 @@
             </div>
         </div>
 
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="loginModalLabel">Sign Up</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" class="form-control" id="loginemail" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Name</label>
+                                <input type="password" class="form-control" name="password" id="loginpassword" placeholder="Enter your password">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Bootstrap JS and dependencies -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -204,11 +241,50 @@
                             });
                 }
 
+                //signup modal
                 const signup = document.getElementById('signup');
-                signup.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    $('#signupModal').modal('show');
-                });
+                if (signup) {
+                    signup.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        $('#signupModal').modal('show');
+                    });
+                }
+
+                //login modal
+                const login = document.getElementById('login');
+                if (login) {
+                    login.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        $('#loginModal').modal('show');
+                    });
+                }
+
+//              logout
+                const logout = document.getElementById('logout');
+                if (logout) {
+                    logout.addEventListener('click', function (e) {
+                        e.preventDefault();
+
+                        fetch('CustomerLogoutServlet', {
+                            method: 'GET',
+                        })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network Response Was Not ok');
+                                    }
+                                    return response.text();
+                                })
+                                .then(data => {
+                                    if(data.trim()==='ok'){
+                                        window.location.reload();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('There was a problem with the fetch operation:', error);
+                                });
+                    });
+                }
+
 
                 //signup
                 const signupForm = document.getElementById('signupForm');
@@ -272,9 +348,45 @@
                             });
                 });
 
+                //login
+                const loginForm = document.getElementById('loginForm');
+                loginForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const urlEncodeData = new URLSearchParams(formData);
+
+                    fetch('CustomerLoginServlet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: urlEncodeData
+                    })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.text(); // Corrected: call response.text() to get response body
+                            })
+                            .then(data => {
+                                if (data.trim() === 'loginOk') {
+                                    console.log("ok");
+                                    $('#loginModal').modal('hide');
+                                    window.location.reload();
+//                                    document.getElementById('signup').style.display = 'none';
+//                                    document.getElementById('login').style.display = 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('There was a problem with the fetch operation:', error);
+                                // Handle errors here
+                            });
+                });
 
             });
         </script>
+
 
 
 

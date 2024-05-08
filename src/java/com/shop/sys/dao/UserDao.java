@@ -70,16 +70,57 @@ public class UserDao {
             pstmt.setString(1, c.getCname());
             pstmt.setString(2, c.getEmail());
             pstmt.setString(3, c.getPhnone());
-            pstmt.setString(4,c.getPassword());
-            
+            pstmt.setString(4, c.getPassword());
+
             pstmt.executeUpdate();
-            flag=true;
-            
+            flag = true;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return flag;
+    }
+
+    public Customer getCustomerByEmailPassword(String email, String password) {
+        Customer customer = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+
+        try {
+            String query = "SELECT * FROM customers WHERE cemail=? AND cpassword=?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, email);
+            ps.setString(2, password);
+            res = ps.executeQuery();
+
+            if (res.next()) {
+                customer = new Customer();
+                customer.setCid(res.getInt("cid"));
+                customer.setCname(res.getString("cname"));
+                customer.setEmail(res.getString("cemail"));
+                customer.setPhnone(res.getString("cphone")); 
+                customer.setPassword(res.getString("cpassword"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Better to log the exception
+            // Throw a custom exception or handle the error as needed
+        } finally {
+            // Close resources in finally block
+            try {
+                if (res != null) {
+                    res.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace(); // Better to log the exception
+                // Handle the error if closing resources fails
+            }
+        }
+
+        return customer;
     }
 
 }

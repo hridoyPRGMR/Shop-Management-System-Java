@@ -24,6 +24,7 @@
     %>
 
     <div class="col-lg-3 pt-4 col-md-3 col-sm-3">
+        
         <div class="card px-4 border shadow-0 mb mb-lg-0" style="justify-items: center">
             <div class="mask px-2" style="height: 50px;">
                 <div class="d-flex justify-content-between">
@@ -32,7 +33,7 @@
                 </div>
             </div>
             <a href="#" class="">
-                <img src="../Image/<%= p.getPimg() %>" class="card-img-top rounded-2" />
+                <img src="Image/<%= p.getPimg() %>" class="card-img-top rounded-2" />
             </a>
             <div class="card-body d-flex flex-column pt-3 border-top">
                 <a href="#" class="nav-link"><%=p.getPname().toUpperCase()%></a>
@@ -42,7 +43,7 @@
                 </div>
                     <strong class="">Available: <%=p.getTotalp()%></strong>
                 <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                    <a href="#" class="btn btn-outline-primary w-100">Add to cart</a>
+                    <a href="#" value="<%=p.getPid()%>" class="btn btn-outline-primary addToCart w-100">Add to cart</a>
                 </div>
             </div>
         </div>

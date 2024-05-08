@@ -40,6 +40,8 @@
     </head>
     <body>
 
+
+
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
@@ -48,6 +50,8 @@
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
@@ -63,7 +67,7 @@
                                 All
                             </a>
                             <div class="dropdown-menu" aria-labelledby="categoryDropdown">
-                                
+
                                 <% 
                                     CategoryDao cd = new CategoryDao(ConnectionProvider.getConnection());
                                     ArrayList<Category> categories = cd.getCategory();
@@ -87,6 +91,8 @@
                                 <i class="fas fa-user"></i> My Account
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#" id="signup">Sign Up</a>
+                                <a class="dropdown-item" href="#">Login</a>
                                 <a class="dropdown-item" href="#">Profile</a>
                                 <a class="dropdown-item" href="#">Orders</a>
                                 <div class="dropdown-divider"></div>
@@ -102,8 +108,52 @@
         </nav>
 
 
+
         <div class="container" id="showProduct">
-            
+
+        </div>
+
+        <!-- Sign Up Modal -->
+        <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="signupForm">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Enter phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label for="password2">Repeat Password</label>
+                                <input type="password" class="form-control" name="password2" id="password2" placeholder="Repeat Password">
+                                <div id="passwordMatchMsg" class="text-danger"></div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Sign Up</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -111,6 +161,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -119,7 +170,7 @@
                 categoryItems.forEach(function (item) {
                     item.addEventListener('click', function (e) {
                         e.preventDefault();
-                        const categoryDropdown = document.getElementById('categoryDropdown'); // Corrected ID name
+                        const categoryDropdown = document.getElementById('categoryDropdown');
                         const name = item.textContent;
                         categoryDropdown.innerText = name;
 
@@ -129,20 +180,103 @@
                 });
 
                 function fetchProductByCategoryId(catid) {
-
-                    let url = 'Load.jsp?catid=' + catid;
-
+                    // Get the base URL dynamically
+                    const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+                    const url = baseUrl + '/Customer/Load.jsp?catid=' + catid;
                     fetch(url)
                             .then(response => response.text())
                             .then(data => {
-                                document.getElementById('showProduct').innerHTML = data; // Print the response from the second JSP page
+                                document.getElementById('showProduct').innerHTML = data;
+                                const addToCartButtons = document.querySelectorAll('.addToCart');
+
+                                //console.log(addToCartButtons);
+
+                                addToCartButtons.forEach(button => {
+                                    button.addEventListener('click', function (e) {
+                                        e.preventDefault();
+                                        console.log("ok");
+                                    });
+                                });
+
                             })
                             .catch(error => {
                                 console.error('Error:', error);
                             });
                 }
+
+                const signup = document.getElementById('signup');
+                signup.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    $('#signupModal').modal('show');
+                });
+
+                //signup
+                const signupForm = document.getElementById('signupForm');
+                signupForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+
+                    const password1 = document.getElementById('password').value;
+                    const password2 = document.getElementById('password2').value;
+
+
+                    if (password1 !== password2) {
+                        document.getElementById('passwordMatchMsg').textContent = "Passwords do not match. Please try again.";
+                        setTimeout(function () {
+                            document.getElementById('passwordMatchMsg').textContent = "";
+                        }, 3000);
+                        return;
+                    }
+
+                    const formData = new FormData(this);
+                    const urlEncodedData = new URLSearchParams(formData);
+
+                    fetch('CustomerSignUpServlet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: urlEncodedData
+                    })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.text();
+                            })
+                            .then(data => {
+
+                                if (data.trim() === 'ok') {
+                                    $('#signupModal').modal('hide');
+                                    Swal.fire({
+                                        title: "Registration Successfull,Try to Login",
+                                        showClass: {
+                                            popup: `
+                                                    animate__animated
+                                                    animate__fadeInUp
+                                                    animate__faster
+                                                    `
+                                        },
+                                        hideClass: {
+                                            popup: `
+                                                    animate__animated
+                                                    animate__fadeOutDown
+                                                    animate__faster
+                                                    `
+                                        }
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('There was a problem with the fetch operation:', error);
+                            });
+                });
+
+
             });
         </script>
+
+
 
     </body>
 </html>

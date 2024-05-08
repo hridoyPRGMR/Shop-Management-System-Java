@@ -408,7 +408,7 @@
             }
 
             function attachEditEventListeners() {
-                const editButtons = document.querySelectorAll('.btn.btn-primary');
+                const editButtons = document.querySelectorAll('.btn.btn-warning');
 
                 editButtons.forEach(function (button) {
                     button.addEventListener('click', function (e) {

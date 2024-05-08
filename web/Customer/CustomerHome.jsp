@@ -95,6 +95,11 @@
 
                                 <%
                                     Customer customer=(Customer)session.getAttribute("currentCustomer");
+                                    boolean customerExists=customer!=null;
+                                    int customerId=0;
+                                    if(customerExists){
+                                        customerId=customer.getCid();
+                                    }
                                 %>
 
                                 <%if(customer==null){%>
@@ -202,6 +207,9 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+
+
+
                 const categoryItems = document.querySelectorAll(".category-item");
                 fetchProductByCategoryId(0);
                 categoryItems.forEach(function (item) {
@@ -228,10 +236,17 @@
 
                                 //console.log(addToCartButtons);
 
+                                const customerExists =<%=customerExists%>;
+                                const customerId =<%=customerId%>
+
                                 addToCartButtons.forEach(button => {
                                     button.addEventListener('click', function (e) {
                                         e.preventDefault();
                                         console.log("ok");
+                                        if (customerExists) {
+                                            console.log("customer id: ",customerId);
+                                            console.log("product id: ",button.getAttribute('value'));
+                                        }
                                     });
                                 });
 
@@ -275,7 +290,7 @@
                                     return response.text();
                                 })
                                 .then(data => {
-                                    if(data.trim()==='ok'){
+                                    if (data.trim() === 'ok') {
                                         window.location.reload();
                                     }
                                 })

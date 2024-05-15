@@ -4,6 +4,14 @@
 <%@page import="com.shop.sys.dao.CategoryDao"%>
 <%@page import="com.sho.sys.helper.ConnectionProvider"%>
 <%@page import="java.util.ArrayList"%>
+
+
+<%
+    Customer customer=(Customer)session.getAttribute("currentCustomer");
+    boolean customerExists=customer!=null;
+
+%>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -94,8 +102,6 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
                                 <%
-                                    Customer customer=(Customer)session.getAttribute("currentCustomer");
-                                    boolean customerExists=customer!=null;
                                     int customerId=0;
                                     if(customerExists){
                                         customerId=customer.getCid();
@@ -115,9 +121,11 @@
 
                             </div>
                         </li>
+                        <%if(customerExists){%>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Cart</a>
+                            <a class="nav-link" href="Customer/Cart.jsp"><i class="fas fa-shopping-cart"></i> Cart</a>
                         </li>
+                        <%}%>
                     </ul>
                 </div>
             </div>
@@ -176,7 +184,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="loginModalLabel">Sign Up</h5>
+                        <h5 class="modal-title" id="loginModalLabel">Login</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -244,8 +252,10 @@
                                         e.preventDefault();
                                         console.log("ok");
                                         if (customerExists) {
-                                            console.log("customer id: ",customerId);
-                                            console.log("product id: ",button.getAttribute('value'));
+                                            const productId = button.getAttribute('value');
+                                            addToCart(customerId, productId);
+                                        } else {
+                                            $('#loginModal').modal('show');
                                         }
                                     });
                                 });
@@ -255,6 +265,48 @@
                                 console.error('Error:', error);
                             });
                 }
+
+                function addToCart(customerId, productId) {
+                    const formData = new FormData();
+                    formData.append('customerId', customerId);
+                    formData.append('productId', productId);
+                    const urlEncodedData = new URLSearchParams(formData);
+
+                    fetch('AddToCartServlet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: urlEncodedData
+                    })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network Response Was Not ok');
+                                }
+                                return response.text();
+                            })
+                            .then(data => {
+                                if (data.trim() === 'addedtocart') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Product Added to Cart',
+                                        showConfirmButton: false,
+                                        timer: 1000 //0.5 sec
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Product already exist in cart',
+                                        timer: 1000 //0.5 sec
+                                    });
+                                }
+
+                            })
+                            .catch(error => {
+                                console.error('There was a problem with the fetch operation:', error);
+                            });
+                }
+
 
                 //signup modal
                 const signup = document.getElementById('signup');

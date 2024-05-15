@@ -58,4 +58,25 @@ public class CategoryDao {
         return list;
     }
     
+    public Category getCategoryByCid(int cid){
+        Category category=null;
+        
+        try{
+            String q="SELECT * FROM productcategory WHERE cid=?";
+            PreparedStatement ps=con.prepareStatement(q);
+            ps.setInt(1, cid);
+            ResultSet rs=ps.executeQuery();
+            
+            if(rs.next()){
+                String cname=rs.getString("cname");
+                String cdes=rs.getString("cdes");
+                category=new Category(cid,cname,cdes);
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return category;
+    }
 }

@@ -66,9 +66,7 @@ public class ProductsDao {
 
             pstmt.close(); // Close PreparedStatement
 
-        } catch (SQLException e) {
-            // Handle SQL exceptions
-            e.printStackTrace();
+        
         } catch (Exception e) {
             // Handle other exceptions
             e.printStackTrace();

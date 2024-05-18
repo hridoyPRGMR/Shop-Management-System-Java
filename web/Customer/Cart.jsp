@@ -146,24 +146,24 @@
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/36faa4be31.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-
                 const quantityInputs = document.querySelectorAll('.quantity');
-                quantityInputs.forEach(function (input) {
-                    input.addEventListener('input', function (e) {
-                        updateTotalPrice();
-                    });
+                const rmvPrFromCart = document.querySelectorAll('.removeProductFromCart');
+                const orderButton = document.getElementById('order');
+
+                quantityInputs.forEach(input => {
+                    input.addEventListener('input', updateTotalPrice);
                 });
 
-                const rmvPrFromCart = document.querySelectorAll('.removeProductFromCart');
-                rmvPrFromCart.forEach(function (remove) {
+                rmvPrFromCart.forEach(remove => {
                     remove.addEventListener('click', function (e) {
                         e.preventDefault();
                         const productId = remove.getAttribute('value');
 
-                        fetch('/ShopManagementSystem/RemoveFromCartServlet?productId=' + productId, {
+                        fetch(`/ShopManagementSystem/RemoveFromCartServlet?productId=${productId}`, {
                             method: 'POST'
                         })
                                 .then(response => {
@@ -173,10 +173,10 @@
                                     return response.text();
                                 })
                                 .then(data => {
-                                    // Find the parent cart section for the removed product
                                     const cartSection = remove.closest('.cart-section');
                                     if (cartSection) {
                                         cartSection.innerHTML = data;
+                                        window.location.reload();
                                         updateTotalPrice();
                                     } else {
                                         console.error('Cart section not found');
@@ -188,29 +188,36 @@
                     });
                 });
 
-                const order = document.getElementById('order');
-
-                order.addEventListener('click', function (e) {
+                orderButton.addEventListener('click', function (e) {
                     e.preventDefault();
 
-                    const customerId =<%=customer.getCid()%>
-                    const formData = new FormData();
+                    Swal.fire({
+                        title: "Are you sure!",
+                        showDenyButton: true,
+                        confirmButtonText: "Yes! Confirm",
+                        denyButtonText: "Cancel It"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            placeOrder();
+                        } else if (result.isDenied) {
+                            Swal.fire("Order cancelled", "", "info");
+                        }
+                    });
+                });
 
+                function placeOrder() {
+                    const customerId = '<%=customer.getCid()%>';
+                    const formData = new FormData();
                     formData.append('customerId', customerId);
 
-//                    const productsMap = new Map();
                     const productRows = document.querySelectorAll('.cart-section');
-
-                    productRows.forEach(function (row) {
-                        const productId = row.querySelector('.productId').getAttribute('value');
-                        const quantity = parseInt(row.querySelector('.quantity').value);
-                        
-                        formData.append('productId[]',productId);
-                        formData.append('quantity[]',quantity);
-                        
+                    productRows.forEach(row => {
+                        const productId = row.querySelector('.productId').value;
+                        const quantity = parseInt(row.querySelector('.quantity').value, 10);
+                        formData.append('productId[]', productId);
+                        formData.append('quantity[]', quantity);
                     });
 
-                    //formData.append("productsMap", productsMap);
                     const urlEncodedData = new URLSearchParams(formData);
 
                     fetch('/ShopManagementSystem/CustomerOrderServlet', {
@@ -218,40 +225,49 @@
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         },
-                        body: urlEncodedData
+                        body: urlEncodedData.toString()
                     })
                             .then(response => {
                                 if (!response.ok) {
-                                    throw new Error('Network Response Was Not ok');
+                                    throw new Error('Network response was not ok');
                                 }
                                 return response.text();
                             })
                             .then(data => {
-                                // Handle success
-                                console.log(data);
+                                productRows.forEach(row => {
+                                    row.querySelector('.quantity').value = '';
+                                });
+                                Swal.fire({
+                                    position: "top",
+                                    icon: "success",
+                                    title: "Ordered placed successfully",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 1500);
                             })
                             .catch(error => {
                                 console.error('There was a problem with the fetch operation:', error);
                             });
+                }
 
-                });
-
+                function updateTotalPrice() {
+                    const quantityInputs = document.querySelectorAll('.quantity');
+                    let totalPrice = 0;
+                    quantityInputs.forEach(input => {
+                        const quantity = parseInt(input.value, 10);
+                        const unitPrice = parseFloat(input.closest('.cart-section').querySelector('.unit-price').dataset.unitPrice);
+                        totalPrice += quantity * unitPrice;
+                    });
+                    document.querySelectorAll('.total-price').forEach(element => {
+                        element.textContent = '$' + (totalPrice + 10);
+                    });
+                }
             });
-            function updateTotalPrice() {
-                const quantityInputs = document.querySelectorAll('.quantity');
-                let totalPrice = 0;
-                quantityInputs.forEach(function (input) {
-                    const quantity = parseInt(input.value);
-                    const unitPrice = parseFloat(input.closest('.cart-section').querySelector('.unit-price').dataset.unitPrice);
-                    totalPrice += quantity * unitPrice;
-                });
-                document.querySelectorAll('.total-price').forEach(function (element) {
-                    element.textContent = '$' + (totalPrice + 10);
-                });
-            }
-
-
         </script>
+
     </body>
 
 </html>

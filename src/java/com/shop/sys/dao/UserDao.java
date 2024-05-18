@@ -102,7 +102,7 @@ public class UserDao {
                 customer.setPhnone(res.getString("cphone")); 
                 customer.setPassword(res.getString("cpassword"));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace(); // Better to log the exception
             // Throw a custom exception or handle the error as needed
         } finally {
@@ -114,7 +114,7 @@ public class UserDao {
                 if (ps != null) {
                     ps.close();
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace(); // Better to log the exception
                 // Handle the error if closing resources fails
             }

@@ -86,7 +86,7 @@
                     <span class="tooltip">File Manger</span>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="#" class="navLink" data-page-url="Orders.jsp">
                         <i class="bx bx-cart-alt"></i>
                         <span class="link_name">Order</span>
                     </a>

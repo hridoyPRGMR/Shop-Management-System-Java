@@ -28,11 +28,7 @@
                 <i class="bx bx-menu" id="btn"></i>
             </div>
             <ul class="nav-list">
-                <li>
-                    <i class="bx bx-search"></i>
-                    <input type="text" placeholder="Search...">
-                    <span class="tooltip">Search</span>
-                </li>
+                
                 <li>
                     <a href="#" class="navLink" data-page-url="DashBoard.jsp">
                         <i class="bx bx-grid-alt" ></i>
@@ -71,20 +67,7 @@
                     </a>
                     <span class="tooltip">Message</span>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="bx bx-pie-chart-alt-2"></i>
-                        <span class="link_name">Analytics</span>
-                    </a>
-                    <span class="tooltip">Analytics</span>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="bx bx-folder"></i>
-                        <span class="link_name">File Manger</span>
-                    </a>
-                    <span class="tooltip">File Manger</span>
-                </li>
+                
                 <li>
                     <a href="#" class="navLink" data-page-url="Orders.jsp">
                         <i class="bx bx-cart-alt"></i>
@@ -92,13 +75,7 @@
                     </a>
                     <span class="tooltip">Order</span>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="bx bx-cog"></i>
-                        <span class="link_name">Settings</span>
-                    </a>
-                    <span class="tooltip">Settings</span>
-                </li>
+                
                 <li class="profile">
                     <div class="profile_details">
                         <img src="" alt="profile image">

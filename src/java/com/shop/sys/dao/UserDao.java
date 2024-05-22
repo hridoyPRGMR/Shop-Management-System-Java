@@ -105,21 +105,32 @@ public class UserDao {
         } catch (Exception e) {
             e.printStackTrace(); // Better to log the exception
             // Throw a custom exception or handle the error as needed
-        } finally {
-            // Close resources in finally block
-            try {
-                if (res != null) {
-                    res.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace(); // Better to log the exception
-                // Handle the error if closing resources fails
+        } 
+        return customer;
+    }
+    
+    public Customer getCustomerById(int id){
+        Customer customer=null;
+        
+        try{
+            String q="SELECT * FROM customers WHERE cid=?";
+            PreparedStatement ps=con.prepareStatement(q);
+            ps.setInt(1, id);
+            ResultSet res=ps.executeQuery();
+            
+            if(res.next()){
+                customer = new Customer();
+                customer.setCid(res.getInt("cid"));
+                customer.setCname(res.getString("cname"));
+                customer.setEmail(res.getString("cemail"));
+                customer.setPhnone(res.getString("cphone")); 
+                customer.setPassword(res.getString("cpassword"));
             }
+            
+        }catch(Exception e){
+            e.printStackTrace();
         }
-
+        
         return customer;
     }
 

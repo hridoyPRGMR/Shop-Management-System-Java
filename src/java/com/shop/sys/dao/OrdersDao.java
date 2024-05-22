@@ -98,11 +98,12 @@ public class OrdersDao {
                 int customerId=res.getInt("customerid");
                 int productId=res.getInt("productid");
                 int quantity=res.getInt("quantity");
-                
+                Timestamp date=res.getTimestamp("orderdate");
+                        
                 c=ud.getCustomerById(customerId);
                 p=pd.getProductByPid(productId);
                 
-                OrderDetails od=new OrderDetails(c,p,quantity);
+                OrderDetails od=new OrderDetails(c,p,quantity,date);
                 
                 if(orderDetailsMap.containsKey(customerId)){
                     orderDetailsMap.get(customerId).add(od);
@@ -120,4 +121,39 @@ public class OrdersDao {
 
             return orderDetailsMap;
     }
+    
+    public boolean deleteOrders(int customerId,int productId,Timestamp date){
+        boolean flag=false;
+        PreparedStatement ps=null;
+        
+        try{
+            String q="DELETE FROM orders WHERE customerid=? AND productid=? AND DATE_FORMAT(orderdate, '%Y-%m-%d %H:%i:%s') = ?";
+            ps=con.prepareStatement(q);
+            ps.setInt(1, customerId);
+            ps.setInt(2,productId);
+            ps.setString(3, date.toString().substring(0, 19));
+            
+            //System.out.println(date);
+            
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                flag = true;
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        finally{
+            if(ps!=null){
+                try{
+                    ps.close();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        return flag;
+    }
+    
 }

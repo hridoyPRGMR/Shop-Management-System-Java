@@ -12,7 +12,13 @@
 <%@page import="com.shop.sys.entities.Products"%>
 <%@page import="com.shop.sys.entities.Customer"%>
 <%@page import="java.util.*"%>
+<%@page import="java.sql.Timestamp"%>
 
+<%@page import="com.google.gson.Gson"%>
+
+<% 
+Gson gson = new Gson();
+%>
 
 <%
     String date = request.getParameter("selectedDate");
@@ -65,6 +71,7 @@
                 <%  
                     int totalPrice=0;
                     for(OrderDetails orderD:orderDetails){
+                        //Timestamp dateD=orderD.getDate();
                         int q=orderD.getQuantity();
                         int p=q*orderD.getProduct().getUnitprice();
                         totalPrice+=p;
@@ -75,6 +82,7 @@
                     <img class="img-fluid" style="max-height: 50px;max-width: 50px" src="Image/<%=orderD.getProduct().getPimg()%>" alt="Product Image" />
                     <p>Quantity:<%=q%></p>
                     <h5>Price: <%=p%> </h5>
+                   
                 </li>
                 <%}%>
             </ul>
@@ -84,8 +92,9 @@
             <h5>Address:  <%=ud.getCustomerById(customerId).getAddress()%></h5>
         </div>
         <div class="d-grid gap-2 d-md-block">
-            <button class="btn btn-primary" type="button">Placed Order</button>
-            <button class="btn btn-primary" type="button">Deny</button>
+            <button id="confirmOrderRequest" data-order-details='<%=gson.toJson(orderDetails)%>'
+                    class="btn btn-primary confirmOrderRequest" type="button">Confirm Order Request</button>
+            <button id="denyOrderRequest" class="btn btn-primary denyOrderRequest" type="button">Deny</button>
         </div>
     </li>
 </ul>

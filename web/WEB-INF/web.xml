@@ -62,7 +62,7 @@
     </servlet>
     <servlet>
         <servlet-name>OrderDetailsServlet</servlet-name>
-        <servlet-class>com.shop.sys.servlets.OrderDetailsServlet</servlet-class>
+        <servlet-class>com.shop.sys.servlets.OrderConfirmServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -131,4 +131,11 @@
     <welcome-file-list>
         <welcome-file>Customer/CustomerHome.jsp</welcome-file>
     </welcome-file-list>
+    
+    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.2.2</version>
+    </dependency>
+
 </web-app>

@@ -1,6 +1,12 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page import="com.shop.sys.dao.CategoryDao, com.shop.sys.dao.ProductsDao, com.shop.sys.entities.Category, com.shop.sys.entities.User, com.shop.sys.entities.Products, com.sho.sys.helper.ConnectionProvider, com.shop.sys.dao.OrdersDao, java.util.List, java.util.ArrayList, java.sql.Timestamp" %>
 <%@page import="java.util.Set"%>
+<%@page import="com.google.gson.Gson"%>
+
+<% 
+    Gson gson = new Gson();
+%>
+
 <%
     User user = (User) session.getAttribute("currentUser");
     if (user == null) {
@@ -153,7 +159,7 @@
 
                 <!-- Product Container -->
                 <div class="container-fluid" id="order-container">
-                    
+
                 </div>
             </div>
         </div>
@@ -190,7 +196,56 @@
                         })
                         .then(data => {
                             //console.log(data);
-                            document.getElementById('order-container').innerHTML=data;
+                            document.getElementById('order-container').innerHTML = data;
+                            const confirmOrderRequests = document.querySelectorAll('.confirmOrderRequest');
+
+                            confirmOrderRequests.forEach(confirm => {
+                                confirm.addEventListener('click', function (e) {
+                                    e.preventDefault();
+
+                                    Swal.fire({
+                                        title: "Are you sure?",
+                                        showDenyButton: true,
+                                        confirmButtonText: "Yes",
+                                        denyButtonText: `No,Cancel It`
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            const orderDetails = JSON.parse(this.dataset.orderDetails);
+                                            const payload = {
+                                                orderDetails: orderDetails
+                                            };
+                                            fetch('OrderConfirmServlet', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify(payload)
+                                            })
+                                                    .then(response => {
+                                                        if (!response.ok) {
+                                                            throw new Error('Network response was not ok');
+                                                        }
+                                                        return response.json();
+                                                    })
+                                                    .then(data => {
+                                                        //console.log(data);
+                                                        if (data.success) {
+                                                            Swal.fire("Deleted!", "", "success");
+                                                            filterProducts();
+                                                        } else {
+                                                            Swal.fire("Something wrong", "", "error");
+                                                        }
+                                                    })
+                                                    .catch(error => console.error('Error:', error));
+                                        } else if (result.isDenied) {
+                                            Swal.fire("Canceled", "", "info");
+                                        }
+                                    });
+
+
+                                });
+                            });
+
                         })
                         .catch(error => {
                             console.error('Error fetching details:', error);

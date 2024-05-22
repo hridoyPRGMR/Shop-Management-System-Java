@@ -163,6 +163,12 @@
                                 <label for="phoneNumber">Phone Number</label>
                                 <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Enter phone number">
                             </div>
+                            
+                            <div class="form-group">
+                                <label for="address">Address </label>
+                                <input type="text" class="form-control" name="address" id="address" placeholder="Give your full Address">
+                            </div>
+                            
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" name="password" id="password" placeholder="Password">
@@ -172,7 +178,7 @@
                                 <input type="password" class="form-control" name="password2" id="password2" placeholder="Repeat Password">
                                 <div id="passwordMatchMsg" class="text-danger"></div>
                             </div>
-
+                            
                             <button type="submit" class="btn btn-primary">Sign Up</button>
                         </form>
                     </div>

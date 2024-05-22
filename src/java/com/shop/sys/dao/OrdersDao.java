@@ -50,12 +50,6 @@ public class OrdersDao {
         return flag;
     }
 
-    public void getOrderDetails() {
-        OrderDetails orderDetails = null;
-
-        Map<Integer, Integer> mp = new HashMap<>();
-    }
-
     public Set<Timestamp> getOrderDates() {
         Set<Timestamp> orderDate = new HashSet<>();
         

@@ -65,13 +65,14 @@ public class UserDao {
         boolean flag = false;
 
         try {
-            String q = "INSERT INTO customers(cname,cemail,cphone,cpassword) VALUES(?,?,?,?)";
+            String q = "INSERT INTO customers(cname,cemail,cphone,address,cpassword) VALUES(?,?,?,?,?)";
             PreparedStatement pstmt = con.prepareStatement(q);
             pstmt.setString(1, c.getCname());
             pstmt.setString(2, c.getEmail());
             pstmt.setString(3, c.getPhnone());
-            pstmt.setString(4, c.getPassword());
-
+            pstmt.setString(4,c.getAddress());
+            pstmt.setString(5, c.getPassword());
+            
             pstmt.executeUpdate();
             flag = true;
 
@@ -123,7 +124,8 @@ public class UserDao {
                 customer.setCid(res.getInt("cid"));
                 customer.setCname(res.getString("cname"));
                 customer.setEmail(res.getString("cemail"));
-                customer.setPhnone(res.getString("cphone")); 
+                customer.setPhnone(res.getString("cphone"));
+                customer.setAddress(res.getString("address"));
                 customer.setPassword(res.getString("cpassword"));
             }
             

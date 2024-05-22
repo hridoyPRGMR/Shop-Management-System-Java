@@ -19,9 +19,10 @@ public class CustomerSignUpServlet extends HttpServlet {
             String name=request.getParameter("name");
             String email=request.getParameter("email");
             String phone=(String)request.getParameter("phoneNumber");
+            String address=request.getParameter("address");
             String password=request.getParameter("password");
             
-            Customer customer=new Customer(name,email,phone,password);
+            Customer customer=new Customer(name,email,phone,address,password);
             UserDao ud=new UserDao(ConnectionProvider.getConnection());
             
             if(ud.saveCustomer(customer)){

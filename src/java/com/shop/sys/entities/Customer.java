@@ -7,22 +7,25 @@ public class Customer {
     private String email;
     private String phnone;
     private String password;
-
+    private String address;
+    
     public Customer() {
     }
 
-    public Customer(int cid, String cname, String email, String phnone, String password) {
+    public Customer(int cid, String cname, String email, String phnone,String address, String password) {
         this.cid = cid;
         this.cname = cname;
         this.email = email;
         this.phnone = phnone;
+        this.address=address;
         this.password = password;
     }
 
-    public Customer(String cname, String email, String phnone, String password) {
+    public Customer(String cname, String email, String phnone,String address, String password) {
         this.cname = cname;
         this.email = email;
         this.phnone = phnone;
+        this.address=address;
         this.password = password;
     }
 
@@ -64,6 +67,14 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
     
     

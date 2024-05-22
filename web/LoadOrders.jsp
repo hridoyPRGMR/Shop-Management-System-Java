@@ -81,7 +81,7 @@
         </div>
         <div class="d-flex justify-content-between align-items-center mt-2 pb-2">
             <h5>Total Price: <%=totalPrice%></h5>
-            <h5>Address:  </h5>
+            <h5>Address:  <%=ud.getCustomerById(customerId).getAddress()%></h5>
         </div>
         <div class="d-grid gap-2 d-md-block">
             <button class="btn btn-primary" type="button">Placed Order</button>

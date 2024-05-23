@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sho.sys.helper.ConnectionProvider;
 import com.shop.sys.dao.OrdersDao;
+import com.shop.sys.dao.SellDetailsDao;
 import com.shop.sys.entities.OrderDetails;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,13 +47,16 @@ public class OrderConfirmServlet extends HttpServlet {
             List<OrderDetails> orderDetails = data.get("orderDetails");
             
             OrdersDao od=new OrdersDao(ConnectionProvider.getConnection());
+            SellDetailsDao sd=new SellDetailsDao(ConnectionProvider.getConnection());
             
-             StringBuilder details = new StringBuilder();
+            //StringBuilder details = new StringBuilder();
             for (OrderDetails orderD : orderDetails) {
                 int customerId=orderD.getCustomer().getCid();
                 int productId=orderD.getProduct().getPid();
+                int quantity=orderD.getQuantity();
                 Timestamp date=orderD.getDate();
                 od.deleteOrders(customerId, productId, date);
+                sd.insertIntoSell(customerId,productId,quantity,date);
             }
             //System.out.println(details.toString());
             

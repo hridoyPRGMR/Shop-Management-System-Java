@@ -38,11 +38,11 @@
                 </li>
                 
                 <li>
-                    <a a="#" class="navLink" data-page-url="SellProducts.jsp">
+                    <a a="#" class="navLink" data-page-url="SellDetails.jsp">
                         <i class="fa-solid fa-info"></i>
                         <span class="link_name">Sell Information</span>
                     </a>
-                    <span class="tooltip">Manage</span>
+                    <span class="tooltip">Sell Information</span>
                 </li>
                 
                 <li>

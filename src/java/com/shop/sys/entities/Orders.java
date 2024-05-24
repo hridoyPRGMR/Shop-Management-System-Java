@@ -9,6 +9,7 @@ public class Orders {
     private int productId;
     private int quantity;
     private Timestamp orderDate;
+    private String status;
     
     public Orders(){
         
@@ -28,6 +29,14 @@ public class Orders {
         this.quantity = quantity;
         this.orderDate = orderDate;
     }
+
+    public Orders(int productId, int quantity,String status) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.status = status;
+    }
+    
+    
 
     public int getOrderId() {
         return orderId;
@@ -67,6 +76,14 @@ public class Orders {
 
     public void setOrderDate(Timestamp orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     
     

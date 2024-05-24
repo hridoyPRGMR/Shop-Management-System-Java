@@ -1,15 +1,25 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="com.shop.sys.entities.Category"%>
 <%@page import="com.shop.sys.entities.Customer"%>
+<%@page import="com.shop.sys.entities.Products"%>
+<%@page import="com.shop.sys.entities.Orders"%>
 <%@page import="com.shop.sys.dao.CategoryDao"%>
+<%@page import="com.shop.sys.dao.OrdersDao"%>
+<%@page import="com.shop.sys.dao.ProductsDao"%>
 <%@page import="com.sho.sys.helper.ConnectionProvider"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+
 
 
 <%
     Customer customer=(Customer)session.getAttribute("currentCustomer");
     boolean customerExists=customer!=null;
-
+    
+    int cid=-1;
+    if(customerExists){
+        cid=customer.getCid();
+    }
 %>
 
 <!DOCTYPE html>
@@ -114,7 +124,8 @@
                                 <%}else{%>
 
                                 <a class="dropdown-item" href="#">Profile</a>
-                                <a class="dropdown-item" href="#">Orders</a>
+                                <a class="dropdown-item" href="#" id="orders">Orders</a>
+
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" id="logout">Logout</a>
                                 <%}%>
@@ -163,12 +174,12 @@
                                 <label for="phoneNumber">Phone Number</label>
                                 <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Enter phone number">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="address">Address </label>
                                 <input type="text" class="form-control" name="address" id="address" placeholder="Give your full Address">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" name="password" id="password" placeholder="Password">
@@ -178,7 +189,7 @@
                                 <input type="password" class="form-control" name="password2" id="password2" placeholder="Repeat Password">
                                 <div id="passwordMatchMsg" class="text-danger"></div>
                             </div>
-                            
+
                             <button type="submit" class="btn btn-primary">Sign Up</button>
                         </form>
                     </div>
@@ -212,6 +223,55 @@
             </div>
         </div>
 
+        <!-- Orders Modal -->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Orders</h5>
+                    </div>
+                    <div class="modal-body">
+                        <%  
+                            if(cid >= 1) {
+                                OrdersDao od = new OrdersDao(ConnectionProvider.getConnection());
+                                ProductsDao pd = new ProductsDao(ConnectionProvider.getConnection());
+                                List<Orders> orders = od.getOrdersByCid(cid);
+                        %>
+                        <ul class="list-group">
+                            <% for(Orders o : orders) {
+                                Products p = pd.getProductByPid(o.getProductId());
+                                int quantity = o.getQuantity();
+                                int price = p.getUnitprice();
+                            %>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img class="img-fluid rounded mr-3" style="max-height: 30px; max-width: 30px;" src="Image/<%= p.getPimg() %>" alt="<%= p.getPname() %>"/>
+                                    <div>
+                                        <h6 class="mb-0"><%= p.getPname() %></h6>
+                                        <small class="text-muted">Status: <%= o.getStatus() %></small>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="mb-0">Quantity: <%= quantity %></p>
+                                    <p class="mb-0">Price: <%= quantity * price %> </p>
+                                </div>
+                            </li>
+                            <% } %>
+                        </ul>
+                        <% } else { %>
+                        <div class="text-center">
+                            <h5>Please log in</h5>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="closeOrderModal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Bootstrap JS and dependencies -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -219,10 +279,25 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
         <script>
             document.addEventListener('DOMContentLoaded', function () {
 
+                const order = document.getElementById('orders');
+                const closeOrderModal = document.getElementById('closeOrderModal');
+                const modal = new bootstrap.Modal(document.getElementById('exampleModal2'));
 
+                if (order) {
+                    order.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        modal.show();
+                    });
+                }
+
+                closeOrderModal.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    modal.hide();
+                });
 
                 const categoryItems = document.querySelectorAll(".category-item");
                 fetchProductByCategoryId(0);

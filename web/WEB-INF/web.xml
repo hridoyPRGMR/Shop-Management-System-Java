@@ -64,6 +64,10 @@
         <servlet-name>OrderDetailsServlet</servlet-name>
         <servlet-class>com.shop.sys.servlets.OrderConfirmServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveOrderServlet</servlet-name>
+        <servlet-class>com.shop.sys.servlets.RemoveOrderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -128,14 +132,16 @@
         <servlet-name>OrderDetailsServlet</servlet-name>
         <url-pattern>/OrderDetailsServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveOrderServlet</servlet-name>
+        <url-pattern>/RemoveOrderServlet</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Customer/CustomerHome.jsp</welcome-file>
     </welcome-file-list>
-    
     <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
         <version>2.2.2</version>
     </dependency>
-
 </web-app>

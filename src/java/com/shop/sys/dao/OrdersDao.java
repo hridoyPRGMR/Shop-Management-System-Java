@@ -144,11 +144,12 @@ public class OrdersDao {
             //System.out.println(date);
             ps.executeUpdate();
 
-            String q2 = "UPDATE confirmorder SET status=? WHERE customerid=? AND DATE(date) = DATE(?)";
+            String q2 = "UPDATE confirmorder SET status=? WHERE customerid=? AND productid=? AND DATE(date) = DATE(?)";
             ps = con.prepareStatement(q2);
             ps.setString(1, "confirm");
             ps.setInt(2, customerId);
-            ps.setTimestamp(3, date);
+            ps.setInt(3, productId);
+            ps.setTimestamp(4, date);
 
             int rowsAffected = ps.executeUpdate();
 
@@ -204,5 +205,44 @@ public class OrdersDao {
 
         return orders;
     }
-
+    
+    public boolean removeProduct(int cid,int pid,Timestamp date){
+        boolean flag=false;
+        PreparedStatement ps=null;
+        
+        try{
+            String q="DELETE FROM orders WHERE customerid=? and productid=? and DATE(orderdate) = DATE(?)";
+            ps=con.prepareStatement(q);
+            ps.setInt(1, cid);
+            ps.setInt(2,pid);
+            ps.setTimestamp(3, date);
+            
+            ps.executeUpdate();
+            
+            String q2 = "UPDATE confirmorder SET status=? WHERE customerid=? AND productid=? AND DATE(date) = DATE(?)";
+            ps = con.prepareStatement(q2);
+            ps.setString(1, "cancel");
+            ps.setInt(2, cid);
+            ps.setInt(3, pid);
+            ps.setTimestamp(4,date);
+            ps.executeUpdate();
+            
+            flag=true;
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        finally{
+            if(ps!=null){
+                try{
+                    ps.close();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        return flag;
+    }
+    
 }

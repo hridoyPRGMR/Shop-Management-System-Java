@@ -3,7 +3,7 @@
 <%@page import="java.util.Set"%>
 <%@page import="com.google.gson.Gson"%>
 
-<% 
+<%
     Gson gson = new Gson();
 %>
 
@@ -71,7 +71,6 @@
                 background-color: #f5f5f5;
             }
 
-            /* Custom Styling for Columns */
             .add-product-column {
                 border-right: 1px solid #ddd;
             }
@@ -151,7 +150,7 @@
                         <select id="filterSelect" class="form-control" onchange="filterProducts()">
                             <option value="0" class="c-link active">Select Dates</option>
                             <% for (Timestamp date : orderDate) { %>
-                            <option value="<%= date %>" class="c-link"><%= date %></option>
+                            <option value="<%= date %>" class="c-link shaon"><%= date %></option>
                             <% } %>
                         </select>
                     </form>
@@ -195,9 +194,9 @@
                             return response.text();
                         })
                         .then(data => {
-                            //console.log(data);
                             document.getElementById('order-container').innerHTML = data;
                             const confirmOrderRequests = document.querySelectorAll('.confirmOrderRequest');
+                            const removeOrder = document.querySelectorAll('.btn-outline-danger');
 
                             confirmOrderRequests.forEach(confirm => {
                                 confirm.addEventListener('click', function (e) {
@@ -228,7 +227,6 @@
                                                         return response.json();
                                                     })
                                                     .then(data => {
-                                                        //console.log(data);
                                                         if (data.success) {
                                                             Swal.fire("Deleted!", "", "success");
                                                             filterProducts();
@@ -241,18 +239,72 @@
                                             Swal.fire("Canceled", "", "info");
                                         }
                                     });
-
-
                                 });
                             });
 
+                            removeOrder.forEach(remove => {
+                                remove.addEventListener('click', function (e) {
+                                    e.preventDefault();
+
+                                    const str = remove.value;
+
+                                    let cnt = 0;
+                                    let arr = ["", "", ""];
+
+                                    for (let i = 0; i < str.length; i++) {
+                                        if (cnt <= 1 && str[i] == '-') {
+                                            cnt++;
+                                            continue;
+                                        }
+                                        if (cnt == 0)
+                                            arr[0] += str[i];
+                                        else if (cnt == 1)
+                                            arr[1] += str[i];
+                                        else
+                                            arr[2] += str[i];
+                                    }
+
+                                    const formData = new FormData();
+                                    formData.append("cid", arr[0]);
+                                    formData.append("pid", arr[1]);
+                                    formData.append("date", arr[2]);
+                                    const urlEncodedData = new URLSearchParams(formData);
+
+                                    fetch('RemoveOrderServlet', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: urlEncodedData
+                                    })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error('net work response was not ok');
+                                                }
+                                                return response.text();
+                                            })
+                                            .then(data => {
+                                                if (data.trim() == "ok") {
+                                                    Swal.fire({
+                                                        position: "top",
+                                                        icon: "success",
+                                                        title: "Successfully removed",
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                    filterProducts();
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error("problem with fetch operation:", error);
+                                            });
+                                });
+                            });
                         })
                         .catch(error => {
                             console.error('Error fetching details:', error);
                         });
             }
-
-
         </script>
 
     </body>

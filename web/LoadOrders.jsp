@@ -71,18 +71,20 @@ Gson gson = new Gson();
                 <%  
                     int totalPrice=0;
                     for(OrderDetails orderD:orderDetails){
-                        //Timestamp dateD=orderD.getDate();
+                        Timestamp dateD=orderD.getDate();
                         int q=orderD.getQuantity();
                         int p=q*orderD.getProduct().getUnitprice();
+                        int pid=orderD.getProduct().getPid();
+                        int cid=orderD.getCustomer().getCid();
                         totalPrice+=p;
                 %>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <h5>Product Name: <%=orderD.getProduct().getPname()%></h5>
-                    <h5>Product ID: <%=orderD.getProduct().getPid()%></h5>
+                    <h5>Product ID: <%=pid%></h5>
                     <img class="img-fluid" style="max-height: 50px;max-width: 50px" src="Image/<%=orderD.getProduct().getPimg()%>" alt="Product Image" />
                     <p>Quantity:<%=q%></p>
                     <h5>Price: <%=p%> </h5>
-                   
+                    <button type="button" value="<%=cid%>-<%=pid%>-<%=dateD%>" class="btn btn-outline-danger">Remove</button>
                 </li>
                 <%}%>
             </ul>

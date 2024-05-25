@@ -240,7 +240,7 @@
                                 Swal.fire({
                                     position: "top",
                                     icon: "success",
-                                    title: "Ordered placed successfully",
+                                    title: "Ordered request send successfully",
                                     showConfirmButton: false,
                                     timer: 1500
                                 });

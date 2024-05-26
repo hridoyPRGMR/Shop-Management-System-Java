@@ -61,14 +61,6 @@
                     <span class="tooltip">User</span>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class="bx bx-chat"></i>
-                        <span class="link_name">Message</span>
-                    </a>
-                    <span class="tooltip">Message</span>
-                </li>
-                
-                <li>
                     <a href="#" class="navLink" data-page-url="Orders.jsp">
                         <i class="bx bx-cart-alt"></i>
                         <span class="link_name">Order</span>

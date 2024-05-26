@@ -54,6 +54,11 @@ public class OrderConfirmServlet extends HttpServlet {
                 int customerId=orderD.getCustomer().getCid();
                 int productId=orderD.getProduct().getPid();
                 int quantity=orderD.getQuantity();
+                
+                if(!od.reduceQuantity(productId,quantity)){
+                   continue;
+                }
+                
                 Timestamp date=orderD.getDate();
                 od.deleteOrders(customerId, productId, date);
                 sd.insertIntoSell(customerId,productId,quantity,date);

@@ -75,6 +75,7 @@ Gson gson = new Gson();
                         int q=orderD.getQuantity();
                         int p=q*orderD.getProduct().getUnitprice();
                         int pid=orderD.getProduct().getPid();
+                        int available=orderD.getProduct().getTotalp();
                         int cid=orderD.getCustomer().getCid();
                         totalPrice+=p;
                 %>
@@ -84,6 +85,7 @@ Gson gson = new Gson();
                     <img class="img-fluid" style="max-height: 50px;max-width: 50px" src="Image/<%=orderD.getProduct().getPimg()%>" alt="Product Image" />
                     <p>Quantity:<%=q%></p>
                     <h5>Price: <%=p%> </h5>
+                    <h5>Available: <%=available%></h5>
                     <button type="button" value="<%=cid%>-<%=pid%>-<%=dateD%>" class="btn btn-outline-danger">Remove</button>
                 </li>
                 <%}%>
@@ -96,7 +98,6 @@ Gson gson = new Gson();
         <div class="d-grid gap-2 d-md-block">
             <button id="confirmOrderRequest" data-order-details='<%=gson.toJson(orderDetails)%>'
                     class="btn btn-primary confirmOrderRequest" type="button">Confirm Order Request</button>
-            <button id="denyOrderRequest" class="btn btn-primary denyOrderRequest" type="button">Deny</button>
         </div>
     </li>
 </ul>

@@ -205,44 +205,76 @@ public class OrdersDao {
 
         return orders;
     }
-    
-    public boolean removeProduct(int cid,int pid,Timestamp date){
-        boolean flag=false;
-        PreparedStatement ps=null;
-        
-        try{
-            String q="DELETE FROM orders WHERE customerid=? and productid=? and DATE(orderdate) = DATE(?)";
-            ps=con.prepareStatement(q);
+
+    public boolean removeProduct(int cid, int pid, Timestamp date) {
+        boolean flag = false;
+        PreparedStatement ps = null;
+
+        try {
+            String q = "DELETE FROM orders WHERE customerid=? and productid=? and DATE(orderdate) = DATE(?)";
+            ps = con.prepareStatement(q);
             ps.setInt(1, cid);
-            ps.setInt(2,pid);
+            ps.setInt(2, pid);
             ps.setTimestamp(3, date);
-            
+
             ps.executeUpdate();
-            
+
             String q2 = "UPDATE confirmorder SET status=? WHERE customerid=? AND productid=? AND DATE(date) = DATE(?)";
             ps = con.prepareStatement(q2);
             ps.setString(1, "cancel");
             ps.setInt(2, cid);
             ps.setInt(3, pid);
-            ps.setTimestamp(4,date);
+            ps.setTimestamp(4, date);
             ps.executeUpdate();
-            
-            flag=true;
-            
-        }catch(Exception e){
+
+            flag = true;
+
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally{
-            if(ps!=null){
-                try{
+        } finally {
+            if (ps != null) {
+                try {
                     ps.close();
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        
+
         return flag;
     }
-    
+
+    public boolean reduceQuantity(int productId, int quantity) {
+        boolean flag = false;
+        PreparedStatement psSelect = null;
+        PreparedStatement psUpdate = null;
+        ResultSet rs = null;
+
+        try {
+            String selectQuery = "SELECT totalp FROM products WHERE pid = ?";
+            psSelect = con.prepareStatement(selectQuery);
+            psSelect.setInt(1, productId);
+            rs = psSelect.executeQuery();
+
+            if (rs.next()) {
+                int currentQuantity = rs.getInt("totalp");
+
+                if (quantity <= currentQuantity) {        
+                    String updateQuery = "UPDATE products SET totalp = totalp - ? WHERE pid = ?";
+                    psUpdate = con.prepareStatement(updateQuery);
+                    psUpdate.setInt(1, quantity);
+                    psUpdate.setInt(2, productId);
+
+                    int rowsAffected = psUpdate.executeUpdate();
+                    if (rowsAffected > 0) {
+                        flag = true;
+                    }
+                }
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        return flag;
+    }
 }

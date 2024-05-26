@@ -46,6 +46,11 @@
     <%
         SellDetailsDao sd = new SellDetailsDao(ConnectionProvider.getConnection());
         List<OrderDetails> details = sd.getAllSellData();
+        long total = 0;
+        for (OrderDetails d : details) {
+            int p = d.getProduct().getUnitprice() * d.getQuantity();
+            total += p;
+        }
     %>
 
     <div class="container">
@@ -54,11 +59,12 @@
                 <div class="container-fluid">
                     <h3 class="navbar-brand">Sell Information</h3>
                     <h6 class="ms-auto">Total Sell: <%= details.size() %></h6>
+                    <h6 class="ms-auto" id="total">Total Sell: <%= total %></h6>
                 </div>
             </nav>
 
             <ul class="list-group list-group-flush">
-                <%
+                <%  
                     for (OrderDetails d : details) {
                         String pname = d.getProduct().getPname();
                         int pid = d.getProduct().getPid();
@@ -84,5 +90,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+   <script>
+        document.addEventListener('DOMContentLoaded', function() {
+           
+        });
+    </script>
+    
 </body>
 </html>

@@ -10,8 +10,6 @@
     <body>
         
         
-        
-        
         <div class="container">
             <section class="h-100 gradient-form" ">
                 <div class="container py-2 h-100">

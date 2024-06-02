@@ -30,7 +30,7 @@ CREATE TABLE `confirmorder` (
   `status` varchar(45) NOT NULL DEFAULT 'pending',
   `date` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   PRIMARY KEY (`orderid`,`date`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `confirmorder` (
 
 LOCK TABLES `confirmorder` WRITE;
 /*!40000 ALTER TABLE `confirmorder` DISABLE KEYS */;
-INSERT INTO `confirmorder` VALUES (1,2,16,1,'confirm','2024-05-24 08:26:33.946'),(2,2,17,1,'confirm','2024-05-24 08:26:33.956'),(3,2,18,1,'confirm','2024-05-24 08:26:33.968'),(4,2,19,1,'confirm','2024-05-24 08:26:33.979');
+INSERT INTO `confirmorder` VALUES (1,2,16,1,'confirm','2024-05-25 09:45:11.324'),(2,2,17,1,'confirm','2024-05-25 09:45:11.339'),(3,2,18,1,'confirm','2024-05-25 09:45:11.351'),(4,2,19,1,'confirm','2024-05-25 09:45:11.366'),(5,2,24,1,'confirm','2024-05-25 09:45:11.379'),(6,2,25,1,'cancel','2024-05-25 09:45:11.389'),(7,2,18,1,'confirm','2024-05-26 07:40:01.381'),(8,2,19,1,'confirm','2024-05-26 07:40:01.397'),(9,2,16,1,'confirm','2024-05-26 07:40:01.406'),(10,2,17,5,'cancel','2024-05-26 08:14:36.578'),(11,1,19,4,'confirm','2024-05-26 08:26:03.555'),(12,1,24,3,'confirm','2024-05-26 08:26:03.567'),(13,1,17,5,'cancel','2024-05-26 08:28:01.510'),(14,1,18,5,'confirm','2024-05-26 08:28:01.522'),(15,2,16,1,'pending','2024-05-26 10:44:00.335'),(16,2,17,1,'pending','2024-05-26 10:44:00.363'),(17,2,19,1,'pending','2024-05-26 10:44:00.378'),(18,2,18,1,'pending','2024-05-26 10:44:00.391');
 /*!40000 ALTER TABLE `confirmorder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +89,7 @@ CREATE TABLE `orders` (
   `orderdate` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
   PRIMARY KEY (`orderid`),
   UNIQUE KEY `orderid_UNIQUE` (`orderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,6 +98,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (15,2,16,1,'2024-05-26 10:44:00.295'),(16,2,17,1,'2024-05-26 10:44:00.357'),(17,2,19,1,'2024-05-26 10:44:00.374'),(18,2,18,1,'2024-05-26 10:44:00.385');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,7 +157,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (16,'Disgo khur','Disgo khur_amra.jpg',1,1,'ty','valo chele nah','2024-04-27 10:41:59',2),(17,'jiuce','jiuce_juice.jfif',34,4,'bcb','cvncn','2024-04-28 07:38:08',5),(18,'fghv','fghv_515Dk7zatmL._AC_UF1000,1000_QL80_.jpg',456,6456,'gjgj','ghj','2024-04-28 07:38:23',5),(19,'Mango','Mango_Mango.jpg',3,5345,'natural','cfgfghfg','2024-05-07 09:30:07',1),(24,'Orange','Orange_orange-1558624428.jpg',4,345,'fdfgh','fnvcbn','2024-05-07 09:30:56',1),(25,'Chips','Chips_download.jfif',34,456,'gdfg','cvbcvb','2024-05-07 09:31:47',2);
+INSERT INTO `products` VALUES (16,'Disgo khur','Disgo khur_amra.jpg',1,0,'ty','valo chele nah','2024-04-27 10:41:59',2),(17,'jiuce','jiuce_juice.jfif',34,4,'bcb','cvncn','2024-04-28 07:38:08',5),(18,'fghv','fghv_515Dk7zatmL._AC_UF1000,1000_QL80_.jpg',456,6450,'gjgj','ghj','2024-04-28 07:38:23',5),(19,'Mango','Mango_Mango.jpg',3,5340,'natural','cfgfghfg','2024-05-07 09:30:07',1),(24,'Orange','Orange_orange-1558624428.jpg',4,342,'fdfgh','fnvcbn','2024-05-07 09:30:56',1),(25,'Chips','Chips_download.jfif',34,456,'gdfg','cvbcvb','2024-05-07 09:31:47',2);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +175,7 @@ CREATE TABLE `selldetails` (
   `quantity` int NOT NULL,
   `date` timestamp(3) NOT NULL,
   PRIMARY KEY (`sellid`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +184,7 @@ CREATE TABLE `selldetails` (
 
 LOCK TABLES `selldetails` WRITE;
 /*!40000 ALTER TABLE `selldetails` DISABLE KEYS */;
-INSERT INTO `selldetails` VALUES (1,16,2,2,'2024-05-23 10:17:08.000'),(2,17,2,2,'2024-05-23 10:17:08.000'),(3,18,2,1,'2024-05-23 10:17:08.000'),(4,19,2,4,'2024-05-23 10:17:08.000'),(5,16,2,1,'2024-05-24 08:17:04.000'),(6,17,2,1,'2024-05-24 08:17:04.000'),(7,18,2,1,'2024-05-24 08:17:04.000'),(8,19,2,1,'2024-05-24 08:17:04.000'),(9,16,2,1,'2024-05-24 08:20:34.000'),(10,17,2,1,'2024-05-24 08:20:34.000'),(11,19,2,1,'2024-05-24 08:20:34.000'),(12,24,2,1,'2024-05-24 08:20:34.000'),(13,25,2,1,'2024-05-24 08:20:34.000'),(14,16,2,1,'2024-05-24 08:26:33.000'),(15,17,2,1,'2024-05-24 08:26:33.000'),(16,18,2,1,'2024-05-24 08:26:33.000'),(17,19,2,1,'2024-05-24 08:26:33.000');
+INSERT INTO `selldetails` VALUES (1,16,2,2,'2024-05-23 10:17:08.000'),(2,17,2,2,'2024-05-23 10:17:08.000'),(3,18,2,1,'2024-05-23 10:17:08.000'),(4,19,2,4,'2024-05-23 10:17:08.000'),(5,16,2,1,'2024-05-24 08:17:04.000'),(6,17,2,1,'2024-05-24 08:17:04.000'),(7,18,2,1,'2024-05-24 08:17:04.000'),(8,19,2,1,'2024-05-24 08:17:04.000'),(9,16,2,1,'2024-05-24 08:20:34.000'),(10,17,2,1,'2024-05-24 08:20:34.000'),(11,19,2,1,'2024-05-24 08:20:34.000'),(12,24,2,1,'2024-05-24 08:20:34.000'),(13,25,2,1,'2024-05-24 08:20:34.000'),(14,16,2,1,'2024-05-24 08:26:33.000'),(15,17,2,1,'2024-05-24 08:26:33.000'),(16,18,2,1,'2024-05-24 08:26:33.000'),(17,19,2,1,'2024-05-24 08:26:33.000'),(18,19,2,1,'2024-05-24 09:47:20.000'),(19,17,2,2,'2024-05-24 09:47:21.000'),(20,18,2,1,'2024-05-24 09:47:21.000'),(21,17,2,1,'2024-05-25 09:32:43.000'),(22,25,2,1,'2024-05-25 09:32:43.000'),(23,24,2,1,'2024-05-25 09:32:43.000'),(24,16,2,1,'2024-05-25 09:32:43.000'),(25,17,2,1,'2024-05-25 09:41:06.000'),(26,18,2,1,'2024-05-25 09:41:06.000'),(27,19,2,1,'2024-05-25 09:41:06.000'),(28,25,2,1,'2024-05-25 09:41:06.000'),(29,16,2,1,'2024-05-25 09:45:11.000'),(30,17,2,1,'2024-05-25 09:45:11.000'),(31,18,2,1,'2024-05-25 09:45:11.000'),(32,19,2,1,'2024-05-25 09:45:11.000'),(33,24,2,1,'2024-05-25 09:45:11.000'),(34,18,2,1,'2024-05-26 07:40:01.000'),(35,19,2,1,'2024-05-26 07:40:01.000'),(36,16,2,1,'2024-05-26 07:40:01.000'),(37,19,1,4,'2024-05-26 08:26:03.000'),(38,24,1,3,'2024-05-26 08:26:03.000'),(39,18,1,5,'2024-05-26 08:28:01.000');
 /*!40000 ALTER TABLE `selldetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -224,4 +225,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-24 15:39:18
+-- Dump completed on 2024-06-02 12:06:09
